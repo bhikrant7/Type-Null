@@ -10,9 +10,8 @@ import { prisma } from "@/db/prisma";
 import { Note } from "@prisma/client";
 import Link from "next/link";
 import SidebarGroupContent from "../../SidebarGroupContent";
-import { Button } from "@/components/ui/button";
 import { useStore } from "@/store/useStore";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 interface AppSidebarProps {
   user: any;
@@ -21,23 +20,7 @@ interface AppSidebarProps {
 
 function AppSidebar({ user, notes }: AppSidebarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { uploads, addUpload } = useStore(); // Zustand store
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const newUpload = {
-        id: crypto.randomUUID(), // Generate unique ID
-        filename: file.name,
-        file: file
-      };
-      addUpload(newUpload); // Add to Zustand store
-    }
-  };
-
-  useEffect(() => {
-    console.log('uploads:', uploads);
-  }, [uploads])
+  const { uploads } = useStore(); // Zustand store
 
   return (
     <Sidebar>
@@ -54,16 +37,6 @@ function AppSidebar({ user, notes }: AppSidebarProps) {
                 to see your uploads
               </p>
             )}
-            <Button onClick={() => fileInputRef.current?.click()}>
-              Upload a file
-            </Button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept="application/pdf"
-              className="hidden"
-              onChange={handleFileUpload}
-            />
           </SidebarGroupLabel>
           {uploads.length > 0 && (
             <ul className="mt-2">

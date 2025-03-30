@@ -34,11 +34,13 @@ export default function RootLayout({
               <div className="flex min-h-screen w-full flex-col">
                 <Header />
                 <div className="flex w-full flex-row mt-2 ml-2">
+                  
                   <div className="flex h-[300px] flex-col gap-2">
                     <h1 className="pl-6 pt-4 font-bold">Self notes of the upload</h1>
                     <InnerNoteSelect />
                     {/* <InnerNoteSelect notes={[]} /> */}
                   </div>
+                  
                   <main className="flex min-h-screen flex-1 flex-col px-2 pt-10 xl:px-4">
                     {children}
                   </main>
