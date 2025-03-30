@@ -2,7 +2,7 @@ import { shadow } from "@/styles/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import DarkModeToggle from "./DarkModeToggle";
+// import DarkModeToggle from "./DarkModeToggle";
 import LogOutButton from "./LogOutButton";
 import { getUser } from "@/auth/server";
 import { SidebarTrigger } from "./ui/sidebar";
@@ -20,17 +20,17 @@ async function Header() {
       <SidebarTrigger className="absolute left-1 top-1" />
 
       <Link className="flex items-end gap-2" href="/">
-        <Image
+        {/* <Image
           src="/goatius.png"
           height={60}
           width={60}
           alt="logo"
           className="rounded-full"
           priority
-        />
+        /> */}
 
         <h1 className="flex flex-col pb-1 text-2xl font-semibold leading-6">
-          GOAT <span>Notes</span>
+          360 <span>Notes</span>
         </h1>
       </Link>
 
@@ -49,7 +49,7 @@ async function Header() {
             </Button>
           </>
         )}
-        <DarkModeToggle />
+        {/* <DarkModeToggle /> */}
       </div>
     </header>
   );
