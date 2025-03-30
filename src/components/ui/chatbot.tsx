@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { useStore } from "@/store/useStore";
+import { useEffect, useRef } from 'react';
 
 interface Message {
   id: string;
@@ -16,9 +17,23 @@ interface Message {
 }
 
 export function Chatbot() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+    const { uploads, addUpload } = useStore(); // Zustand store
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const newUpload = {
+        id: crypto.randomUUID(), // Generate unique ID
+        filename: file.name,
+        file: file
+      };
+      addUpload(newUpload); // Add to Zustand store
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,12 +64,27 @@ export function Chatbot() {
     }, 1000);
   };
 
+  useEffect(() => {
+    console.log('uploads:', uploads);
+  }, [uploads])
+
   return (
     <div className="flex h-[700px] w-full max-w-2xl flex-col rounded-lg border bg-card shadow-lg">
       <div className="flex items-center gap-2 border-b px-4 py-2">
         <Bot className="h-5 w-5 text-primary" />
         <h2 className="text-lg font-semibold">Chat with uploaded file</h2>
+        <Button onClick={() => fileInputRef.current?.click()}>
+          Upload a file
+        </Button>
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept="application/pdf"
+        className="hidden"
+        onChange={handleFileUpload}
+      />
       </div>
+
 
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
