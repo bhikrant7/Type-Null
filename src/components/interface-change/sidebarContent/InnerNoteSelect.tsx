@@ -84,8 +84,8 @@ function InnerNoteSelect({ userId, fileId }: Props) {
           </CardHeader>
           <CardContent></CardContent>
           <CardFooter className="flex justify-between">
-            <Button variant="outline">Edit</Button>
-            <Button variant="destructive">Delete</Button>
+            <Button className="h-6 w-12 p-2 text-xs" variant="outline">Edit</Button>
+            <Button className="h-6 w-12 p-2 text-xs" variant="destructive">Delete</Button>
           </CardFooter>
         </Card>
       ))}
