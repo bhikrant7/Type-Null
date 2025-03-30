@@ -2,9 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Fuse from "fuse.js";
-import { supabase } from "@/lib/supabaseClient";
-import SelectNoteButton from "../../SelectNoteButton";
-import DeleteNoteButton from "../../DeleteNoteButton";
 import {
   Card,
   CardContent,
@@ -19,33 +16,51 @@ type Note = {
   id: string;
   text: string;
   authorId: string;
+  fileId: string;
   updatedAt: string;
 };
 
-function InnerNoteSelect({ userId, fileId }: { userId: string; fileId: string }) {
-  const [notes, setNotes] = useState<Note[]>([]);
+type Props = {
+  userId: string;
+  fileId: string;
+};
+
+function InnerNoteSelect({ userId, fileId }: Props) {
   const [searchText, setSearchText] = useState("");
+  const [notes, setNotes] = useState<Note[]>([]);
 
   useEffect(() => {
-    const fetchNotes = async () => {
-      if (!userId || !fileId) return;
+    // Commenting out database query, using custom data for now
+    // const fetchNotes = async () => {
+    //   const { data, error } = await supabase
+    //     .from("Note")
+    //     .select("*")
+    //     .eq("authorId", userId)
+    //     .eq("fileId", fileId)
+    //     .order("updatedAt", { ascending: false });
 
-      const { data, error } = await supabase
-        .from("Note")
-        .select("*")
-        .eq("authorId", userId)
-        .eq("uploadId", fileId) // Fetch notes under the selected file
-        .order("updatedAt", { ascending: false });
+    //   if (!error) setNotes(data || []);
+    // };
 
-      if (error) {
-        console.error("Error fetching notes:", error.message);
-        return;
-      }
+    // fetchNotes();
 
-      setNotes(data || []);
-    };
-
-    fetchNotes();
+    // Dummy notes for testing
+    setNotes([
+      {
+        id: "1",
+        text: "This is the first note",
+        authorId: userId,
+        fileId: fileId,
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: "2",
+        text: "Another note for testing",
+        authorId: userId,
+        fileId: fileId,
+        updatedAt: new Date().toISOString(),
+      },
+    ]);
   }, [userId, fileId]);
 
   const fuse = useMemo(() => {
@@ -59,29 +74,21 @@ function InnerNoteSelect({ userId, fileId }: { userId: string; fileId: string })
     ? fuse.search(searchText).map((result) => result.item)
     : notes;
 
-  const deleteNoteLocally = (noteId: string) => {
-    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
-  };
-
   return (
     <>
-      {filteredNotes.length === 0 ? (
-        <p>No notes found under this file.</p>
-      ) : (
-        filteredNotes.map((note) => (
-          <Card className="w-[230px]" key={note.id}>
-            <CardHeader>
-              <CardTitle>Note</CardTitle>
-              <CardDescription>{note.text}</CardDescription>
-            </CardHeader>
-            <CardContent></CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline">Edit</Button>
-              <DeleteNoteButton noteId={note.id} onDelete={deleteNoteLocally} />
-            </CardFooter>
-          </Card>
-        ))
-      )}
+      {filteredNotes.map((note) => (
+        <Card className="w-[230px]" key={note.id}>
+          <CardHeader>
+            <CardTitle>Note</CardTitle>
+            <CardDescription>{note.text}</CardDescription>
+          </CardHeader>
+          <CardContent></CardContent>
+          <CardFooter className="flex justify-between">
+            <Button variant="outline">Edit</Button>
+            <Button variant="destructive">Delete</Button>
+          </CardFooter>
+        </Card>
+      ))}
     </>
   );
 }
