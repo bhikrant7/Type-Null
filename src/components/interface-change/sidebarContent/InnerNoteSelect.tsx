@@ -3,8 +3,8 @@
 import { Note } from "@prisma/client";
 import { useEffect, useMemo, useState } from "react";
 import Fuse from "fuse.js";
-import SelectNoteButton from "../SelectNoteButton"; // Update the path to the correct location
-import DeleteNoteButton from "../DeleteNoteButton"; // Update the path to the correct location
+import SelectNoteButton from "../../SelectNoteButton"; // Update the path to the correct location
+import DeleteNoteButton from "../../DeleteNoteButton"; // Update the path to the correct location
 import {
   Card,
   CardContent,
@@ -13,6 +13,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Label } from "@/components/ui/label"; // Ensure the correct path to the Label component
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 type Props = {
   notes: Note[];
@@ -42,11 +45,21 @@ function InnerNoteSelect({ notes }: Props) {
       prevNotes.filter((note) => note.id !== noteId),
     );
   };
-  return(
-    <Card>
-        <CardHeader>
-            <CardTitle></CardTitle>
-        </CardHeader>
+  return (
+    <Card className="w-[350px]">
+      <CardHeader>
+        <CardTitle>Create project</CardTitle>
+        <CardDescription>Deploy your new project in one-click.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Button variant="outline">Cancel</Button>
+        <Button>Deploy</Button>
+      </CardFooter>
     </Card>
-  )
+  );
 }
+
+export default InnerNoteSelect;

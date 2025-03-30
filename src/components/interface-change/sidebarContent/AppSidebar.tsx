@@ -8,7 +8,7 @@ import {
 import { prisma } from "@/db/prisma";
 import { Note } from "@prisma/client";
 import Link from "next/link";
-import SidebarGroupContent from "./SidebarGroupContent";
+import SidebarGroupContent from "../../SidebarGroupContent";
 
 async function AppSidebar() {
   const user = await getUser();
