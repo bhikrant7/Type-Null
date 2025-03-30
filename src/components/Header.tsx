@@ -20,14 +20,14 @@ async function Header() {
       <SidebarTrigger className="absolute left-1 top-1" />
 
       <Link className="flex items-end gap-2" href="/">
-        <Image
+        {/* <Image
           src="/goatius.png"
           height={60}
           width={60}
           alt="logo"
           className="rounded-full"
           priority
-        />
+        /> */}
 
         <h1 className="flex flex-col pb-1 text-2xl font-semibold leading-6">
           GOAT <span>Notes</span>
