@@ -6,7 +6,7 @@ import NoteTextInput from "@/components/NoteTextInput";
 import HomeToast from "@/components/HomeToast";
 import { prisma } from "@/db/prisma";
 import AnalyseButton from "@/components/AnalyseButton";
-import { Chatbot } from "@/components/ui/chatbot";
+import { Chatbot } from "@/components/CustomChatBot/chatbot";
 import ClientWrapper from "@/components/ClientWrapper";
 
 type Props = {

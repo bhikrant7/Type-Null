@@ -28,6 +28,7 @@ model Upload {
 model Note {
   id        String   @id @default(uuid())
   text      String
+  title String 
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
   upload    Upload?  @relation(fields: [uploadId], references: [id])
