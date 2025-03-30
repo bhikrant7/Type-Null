@@ -19,13 +19,13 @@ function LogOutButton() {
     const errorMessage = null;
 
     if (!errorMessage) {
-      router.push(`/?toastType=logOut`);
+      router.push(`/`);
     } else {
       toast("Error", {
         description: errorMessage,
         action: {
           label: "Retry",
-          onClick: () => console.log("Undo"),
+          onClick: () => console.log("Retrying LogIn"),
         },
       });
     }
