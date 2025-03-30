@@ -17,6 +17,9 @@ type Note = {
   id: string;
   text: string;
   uploadId: string;
+  authorId: string;
+  fileId: string;
+  updatedAt: string;
 };
 
 // Define Zustand store

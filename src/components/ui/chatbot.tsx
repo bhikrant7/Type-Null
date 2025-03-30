@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { useStore } from "@/store/useStore";
 
 interface Message {
   id: string;
@@ -52,7 +53,7 @@ export function Chatbot() {
     <div className="flex h-[700px] w-full max-w-2xl flex-col rounded-lg border bg-card shadow-lg">
       <div className="flex items-center gap-2 border-b px-4 py-2">
         <Bot className="h-5 w-5 text-primary" />
-        <h2 className="text-lg font-semibold">AI Assistant</h2>
+        <h2 className="text-lg font-semibold">Chat with uploaded file</h2>
       </div>
 
       <ScrollArea className="flex-1 p-4">

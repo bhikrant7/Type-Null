@@ -7,6 +7,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import InnerNoteSelect from "@/components/interface-change/sidebarContent/InnerNoteSelect";
 import AppSidebar from "@/components/interface-change/sidebarContent/AppSidebar";
 import NoteProvider from "@/providers/NoteProvider";
+import AppSidebarWrapper from "@/components/AppSidebarWrapper";
 
 export const metadata: Metadata = {
   title: "GOAT Notes",
@@ -28,13 +29,13 @@ export default function RootLayout({
         >
           <NoteProvider>
             <SidebarProvider>
-              <AppSidebar />
+              <AppSidebarWrapper />
 
               <div className="flex min-h-screen w-full flex-col">
                 <Header />
                 <div className="flex w-full flex-row mt-2 ml-2">
                   <div className="flex h-[300px] flex-col gap-2">
-                    <h1 className="pl-6 pt-4 font-bold">Self notes of the chapter</h1>
+                    <h1 className="pl-6 pt-4 font-bold">Self notes of the upload</h1>
                     <InnerNoteSelect />
                     {/* <InnerNoteSelect notes={[]} /> */}
                   </div>
