@@ -7,6 +7,7 @@ import HomeToast from "@/components/HomeToast";
 import { prisma } from "@/db/prisma";
 import AnalyseButton from "@/components/AnalyseButton";
 import { Chatbot } from "@/components/ui/chatbot";
+import ClientWrapper from "@/components/ClientWrapper";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -14,25 +15,26 @@ type Props = {
 
 async function HomePage({ searchParams }: Props) {
   const noteIdParam = (await searchParams).noteId;
-  const user = await getUser();
+  const userInfo = await getUser();
+  
 
   const noteId = Array.isArray(noteIdParam)
     ? noteIdParam![0]
     : noteIdParam || "";
 
   const note = await prisma.note.findUnique({
-    where: { id: noteId, authorId: user?.id },
+    where: { id: noteId, authorId: userInfo?.id },
   });
-
-
 
   return (
     <div className="flex h-full items-center justify-between gap-4">
+      <ClientWrapper userId={userInfo?.id || null} email={userInfo?.email || null} />
+
       <div className="flex flex-col items-center h-full w-3/4">
         <div className="flex w-full max-w-4xl justify-end gap-2 pb-2">
           <AnalyseButton />
-          <AskAIButton user={user} />
-          <NewNoteButton user={user} />
+          <AskAIButton user={userInfo} />
+          <NewNoteButton user={userInfo} />
         </div>
 
         <NoteTextInput noteId={noteId} startingNoteText={note?.text || ""} />
