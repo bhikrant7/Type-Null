@@ -29,14 +29,19 @@ export default function RootLayout({
           <NoteProvider>
             <SidebarProvider>
               <AppSidebar />
-              <InnerNoteSelect notes={[]} />
 
               <div className="flex min-h-screen w-full flex-col">
                 <Header />
-
-                <main className="flex flex-1 flex-col px-4 pt-10 xl:px-8">
-                  {children}
-                </main>
+                <div className="flex w-full flex-row mt-2 ml-2">
+                  <div className="flex h-[300px] flex-col gap-2">
+                    <h1 className="pl-6 pt-4 font-bold">Self notes of the chapter</h1>
+                    <InnerNoteSelect />
+                    {/* <InnerNoteSelect notes={[]} /> */}
+                  </div>
+                  <main className="flex min-h-screen flex-1 flex-col px-2 pt-10 xl:px-4">
+                    {children}
+                  </main>
+                </div>
               </div>
             </SidebarProvider>
 

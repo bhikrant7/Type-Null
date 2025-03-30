@@ -1,10 +1,10 @@
 "use client";
 
-import { Note } from "@prisma/client";
 import { useEffect, useMemo, useState } from "react";
 import Fuse from "fuse.js";
-import SelectNoteButton from "../../SelectNoteButton"; // Update the path to the correct location
-import DeleteNoteButton from "../../DeleteNoteButton"; // Update the path to the correct location
+import { supabase } from "@/lib/supabaseClient";
+import SelectNoteButton from "../../SelectNoteButton";
+import DeleteNoteButton from "../../DeleteNoteButton";
 import {
   Card,
   CardContent,
@@ -13,52 +13,76 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label"; // Ensure the correct path to the Label component
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 
-type Props = {
-  notes: Note[];
+type Note = {
+  id: string;
+  text: string;
+  authorId: string;
+  updatedAt: string;
 };
 
-function InnerNoteSelect({ notes }: Props) {
+function InnerNoteSelect({ userId, fileId }: { userId: string; fileId: string }) {
+  const [notes, setNotes] = useState<Note[]>([]);
   const [searchText, setSearchText] = useState("");
-  const [localNotes, setLocalNotes] = useState(notes);
 
   useEffect(() => {
-    setLocalNotes(notes);
-  }, [notes]);
+    const fetchNotes = async () => {
+      if (!userId || !fileId) return;
+
+      const { data, error } = await supabase
+        .from("Note")
+        .select("*")
+        .eq("authorId", userId)
+        .eq("uploadId", fileId) // Fetch notes under the selected file
+        .order("updatedAt", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching notes:", error.message);
+        return;
+      }
+
+      setNotes(data || []);
+    };
+
+    fetchNotes();
+  }, [userId, fileId]);
 
   const fuse = useMemo(() => {
-    return new Fuse(localNotes, {
+    return new Fuse(notes, {
       keys: ["text"],
-      threshold: 0.8,
+      threshold: 0.2,
     });
-  }, [localNotes]);
+  }, [notes]);
 
   const filteredNotes = searchText
     ? fuse.search(searchText).map((result) => result.item)
-    : localNotes;
+    : notes;
 
   const deleteNoteLocally = (noteId: string) => {
-    setLocalNotes((prevNotes) =>
-      prevNotes.filter((note) => note.id !== noteId),
-    );
+    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
   };
+
   return (
-    <Card className="w-[350px]">
-      <CardHeader>
-        <CardTitle>Create project</CardTitle>
-        <CardDescription>Deploy your new project in one-click.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
-        <Button>Deploy</Button>
-      </CardFooter>
-    </Card>
+    <>
+      {filteredNotes.length === 0 ? (
+        <p>No notes found under this file.</p>
+      ) : (
+        filteredNotes.map((note) => (
+          <Card className="w-[230px]" key={note.id}>
+            <CardHeader>
+              <CardTitle>Note</CardTitle>
+              <CardDescription>{note.text}</CardDescription>
+            </CardHeader>
+            <CardContent></CardContent>
+            <CardFooter className="flex justify-between">
+              <Button variant="outline">Edit</Button>
+              <DeleteNoteButton noteId={note.id} onDelete={deleteNoteLocally} />
+            </CardFooter>
+          </Card>
+        ))
+      )}
+    </>
   );
 }
 
