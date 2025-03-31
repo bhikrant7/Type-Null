@@ -1,49 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id         String    @id @default(uuid())
-  email      String    @unique
-  notes      Note[]
-  uploads    Upload[]  // A user can have multiple uploaded files
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt @default(now())
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  notes     Note[]
+  uploads   Upload[]
 }
 
 model Upload {
   id        String   @id @default(uuid())
   filename  String   @unique
-  user      User     @relation(fields: [userId], references: [id])
   userId    String
-  notes     Note[]   // A file can have multiple notes linked to it
   createdAt DateTime @default(now())
+  notes     Note[]
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Note {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   text      String
-  author    User     @relation(fields: [authorId], references: [id])
   authorId  String
-  upload    Upload?  @relation(fields: [uploadId], references: [id])
-  uploadId  String?  // Nullable since some notes may not be linked to a file
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  uploadId  String?
+  title     String?
   analysis  Analysis?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  author    User      @relation(fields: [authorId], references: [id])
+  upload    Upload?   @relation(fields: [uploadId], references: [id])
 }
 
 model Analysis {
-  id              String   @id @default(uuid())
-  note           Note      @relation(fields: [noteId], references: [id])
-  noteId         String    @unique // One-to-one relationship with Note
-  accuracy       Float     // Accuracy score (e.g., 85.5)
-  missingFields  String[]  // List of missing key fields
-  futureStudy    String[]  // Recommended future study topics
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt @default(now())
+  id            String   @id @default(uuid())
+  noteId        String   @unique
+  accuracy      Float
+  missingFields String[]
+  futureStudy   String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+  note          Note     @relation(fields: [noteId], references: [id])
 }
