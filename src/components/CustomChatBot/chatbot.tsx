@@ -172,7 +172,7 @@ export function Chatbot() {
             <span>{uploadedFile.filename}</span>
           </div>
         ) : (
-          <Button onClick={() => fileInputRef.current?.click()}>
+          <Button className="ml-12" onClick={() => fileInputRef.current?.click()}>
             Upload a file
           </Button>
         )}
