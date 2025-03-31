@@ -39,7 +39,7 @@ const Popup = () => {
         </div>
 
         <div className="mt-3">
-          <h3 className="font-medium text-gray-800">Roadmap:</h3>
+          <h3 className="font-medium text-gray-800">Based on your notes, you need to put on some work on the following topics:</h3>
           {noteAnalysisReport.roadmap.length > 0 ? (
             <ul className="list-disc pl-5 text-gray-700">
               {noteAnalysisReport.roadmap.map((step, index) => (
