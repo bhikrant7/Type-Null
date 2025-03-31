@@ -23,16 +23,25 @@ type Note = {
   updatedAt: string;
 };
 
+
+type NoteAnalysisReport = {
+  accuracy: string;
+  missing_info: string[];
+  roadmap: string[];
+}
+
 // Define Zustand store
 interface AppState {
   user: User | null;
   uploads: Upload[];
   note: Note;
   notes: Note[];
+  noteAnalysisReport: NoteAnalysisReport | null;
 
   // Actions
   setNote: (note: Note) => void;
   setUser: (user: User) => void;
+  setNoteAnalysisReport: (report: NoteAnalysisReport | null) => void;
   addUpload: (upload: Upload) => void;
   removeUpload: (id: string) => void;
   addNote: (note: Note) => void;
@@ -56,6 +65,8 @@ export const useStore = create<AppState>()(
         updatedAt: "",
       },
       notes: [],
+      noteAnalysisReport: null,
+      setNoteAnalysisReport: (report) => set({ noteAnalysisReport: report }),
 
       // Set user (Persisted)
       setUser: (user) => set({ user }),
