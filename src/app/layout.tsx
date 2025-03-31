@@ -10,7 +10,7 @@ import NoteProvider from "@/providers/NoteProvider";
 import AppSidebarWrapper from "@/components/AppSidebarWrapper";
 
 export const metadata: Metadata = {
-  title: "GOAT Notes",
+  title: "Note 360",
 };
 
 export default function RootLayout({
