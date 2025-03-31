@@ -28,8 +28,6 @@ model Upload {
 model Note {
   id        String    @id @default(uuid())
   text      String
-  title String 
-  author    User     @relation(fields: [authorId], references: [id])
   authorId  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
