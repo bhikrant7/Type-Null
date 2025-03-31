@@ -15,6 +15,7 @@ type Upload = {
 
 type Note = {
   id: string;
+  title: string;
   text: string;
   uploadId: string;
   authorId: string;
