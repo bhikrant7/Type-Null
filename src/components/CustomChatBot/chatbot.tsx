@@ -165,17 +165,20 @@ export function Chatbot() {
     <div className="flex min-h-[90vh] w-full max-w-2xl flex-col rounded-lg border bg-card shadow-lg">
       <div className="flex items-center gap-2 border-b px-4 py-2">
         <Bot className="h-5 w-5 text-primary" />
-        <h2 className="text-lg font-semibold">Chat with your file</h2>
-        {uploadedFile ? (
-          <div className="flex items-center gap-2 text-sm text-primary">
-            <FileText className="h-4 w-4" />
-            <span>{uploadedFile.filename}</span>
-          </div>
-        ) : (
-          <Button onClick={() => fileInputRef.current?.click()}>
-            Upload a file
-          </Button>
-        )}
+        <div className="flex w-full items-center justify-between">
+          <h2 className="text-lg font-semibold">Chat with your file</h2>
+          {uploadedFile ? (
+            <div className="flex items-center gap-2 text-sm text-primary">
+              <FileText className="h-4 w-4" />
+              <span>{uploadedFile.filename}</span>
+            </div>
+          ) : (
+            <Button onClick={() => fileInputRef.current?.click()}>
+              Upload a file
+            </Button>
+          )}
+        </div>
+
         <input
           type="file"
           ref={fileInputRef}
@@ -189,35 +192,34 @@ export function Chatbot() {
         <div className="space-y-4">
           {messages.map((message) => (
             <div
-            key={message.id}
-            className={cn(
-              "flex w-full max-w-[80%] flex-col gap-1 rounded-lg px-4 py-2",
-              message.role === "user"
-                ? "ml-auto bg-primary text-primary-foreground"
-                : "bg-muted"
-            )}
-          >
-            <div className="flex items-center gap-2">
-              {message.role === "user" ? (
-                <User className="h-4 w-4" />
-              ) : (
-                <Bot className="h-4 w-4" />
+              key={message.id}
+              className={cn(
+                "flex w-full max-w-[80%] flex-col gap-1 rounded-lg px-4 py-2",
+                message.role === "user"
+                  ? "ml-auto bg-primary text-primary-foreground"
+                  : "bg-muted",
               )}
-              <span className="text-sm">
-                {message.role === "user" ? "You" : "Assistant"}
+            >
+              <div className="flex items-center gap-2">
+                {message.role === "user" ? (
+                  <User className="h-4 w-4" />
+                ) : (
+                  <Bot className="h-4 w-4" />
+                )}
+                <span className="text-sm">
+                  {message.role === "user" ? "You" : "Assistant"}
+                </span>
+              </div>
+
+              {/* Fixes overflow by enforcing proper wrapping */}
+              <p className="overflow-hidden text-ellipsis whitespace-pre-wrap break-words text-sm">
+                {message.content}
+              </p>
+
+              <span className="text-xs opacity-50">
+                {message.timestamp.toLocaleTimeString()}
               </span>
             </div>
-          
-            {/* ✅ Fixes overflow by enforcing proper wrapping */}
-            <p className="text-sm break-words whitespace-pre-wrap overflow-hidden text-ellipsis">
-              {message.content}
-            </p>
-          
-            <span className="text-xs opacity-50">
-              {message.timestamp.toLocaleTimeString()}
-            </span>
-          </div>
-          
           ))}
           {isLoading && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
