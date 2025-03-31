@@ -19,7 +19,6 @@ interface AppSidebarProps {
 }
 
 function AppSidebar({ user, notes }: AppSidebarProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const { uploads } = useStore(); // Zustand store
 
   return (
@@ -38,15 +37,17 @@ function AppSidebar({ user, notes }: AppSidebarProps) {
               </p>
             )}
           </SidebarGroupLabel>
-          {uploads.length > 0 && (
-            <ul className="mt-2">
-              {uploads.map((upload) => (
-                <li key={upload.id} className="text-sm">
-                  {upload.filename}
-                </li>
-              ))}
-            </ul>
-          )}
+          <div className="h-1/2">
+            {uploads.length > 0 && (
+              <ul className="mt-2">
+                {uploads.map((upload) => (
+                  <li key={upload.id} className="text-sm">
+                    {upload.filename}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           {user && <SidebarGroupContent notes={notes} />}
         </SidebarGroup>
       </SidebarContent>

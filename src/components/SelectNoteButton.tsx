@@ -43,9 +43,9 @@ function SelectNoteButton({ note }: Props) {
       asChild
       className={`items-start gap-0 pr-12 ${note.id === noteId && "bg-sidebar-accent/50"}`}
     >
-      <Link href={`/?noteId=${note.id}`} className="flex h-fit flex-col">
+      <Link href={`/?noteId=${note.id}&noteTitle=${note.title}`} className="flex h-fit flex-col">
         <p className="w-full overflow-hidden truncate text-ellipsis whitespace-nowrap">
-          {noteText}
+          {note.title}
         </p>
         <p className="text-muted-foreground text-xs">
           {note.updatedAt.toLocaleDateString()}
