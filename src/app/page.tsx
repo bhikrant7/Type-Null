@@ -8,6 +8,7 @@ import { prisma } from "@/db/prisma";
 import AnalyseButton from "@/components/AnalyseButton";
 import { Chatbot } from "@/components/ui/chatbot";
 import ClientWrapper from "@/components/ClientWrapper";
+import AnalyseButtonWrapper from "@/components/AnalyseButtonWrapper";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -32,7 +33,7 @@ async function HomePage({ searchParams }: Props) {
 
       <div className="flex flex-col items-center h-full w-3/4">
         <div className="flex w-full max-w-4xl justify-end gap-2 pb-2">
-          <AnalyseButton />
+          <AnalyseButtonWrapper note={note} />
           <AskAIButton user={userInfo} />
           <NewNoteButton user={userInfo} />
         </div>
