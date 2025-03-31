@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { createNoteAction } from "@/actions/notes";
+import { useStore } from "@/store/useStore";
 
 type Props = {
   user: User | null;
@@ -14,7 +15,7 @@ type Props = {
 
 function NewNoteButton({ user }: Props) {
   const router = useRouter();
-
+  const { clearNote } = useStore();
   const [loading, setLoading] = useState(false);
 
   const handleClickNewNoteButton = async () => {
@@ -25,8 +26,8 @@ function NewNoteButton({ user }: Props) {
 
       const uuid = uuidv4();
       await createNoteAction(uuid);
+      clearNote();
       router.push(`/?noteId=${uuid}&toastType=newNote`);
-
       setLoading(false);
     }
   };

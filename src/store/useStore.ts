@@ -37,6 +37,7 @@ interface AppState {
   removeUpload: (id: string) => void;
   addNote: (note: Note) => void;
   removeNote: (id: string) => void;
+  clearNote: () => void;
 }
 
 // Zustand store with persistence for user
@@ -71,6 +72,16 @@ export const useStore = create<AppState>()(
       addNote: (note) => set((state) => ({ notes: [...state.notes, note] })),
       removeNote: (id) =>
         set((state) => ({ notes: state.notes.filter((n) => n.id !== id) })),
+
+      clearNote: () => set((state) => ({ note: {
+        id: "",
+        title: "",
+        text: "",
+        uploadId: "",
+        authorId: "",
+        fileId: "",
+        updatedAt: ""
+      } }))
     }),
     { name: "user-storage", partialize: (state) => ({ user: state.user }) } // Persist only 'user'
   )
