@@ -30,13 +30,14 @@ export const updateNoteAction = async (noteId: string, title: string, text: stri
     const user = await getUser();
     if (!user) throw new Error("You must be logged in to update a note");
 
-    await prisma.note.update({
+    const response = await prisma.note.update({
       where: { id: noteId },
       data: { title, text },
     });
-
+    console.log('response: ', response);
     return { errorMessage: null };
   } catch (error) {
+    console.error(error);
     return handleError(error);
   }
 };

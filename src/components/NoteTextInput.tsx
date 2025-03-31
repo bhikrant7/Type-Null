@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { Textarea } from "./ui/textarea";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState, useRef } from "react";
 import useNote from "@/hooks/useNote";
 import { updateNoteAction } from "@/actions/notes";
 
@@ -12,12 +12,11 @@ type Props = {
   startingNoteText: string;
 };
 
-let updateTimeout: NodeJS.Timeout;
-
 function NoteTextInput({ noteId, startingNoteTitle, startingNoteText }: Props) {
   const noteIdParam = useSearchParams().get("noteId") || "";
   const { noteText, setNoteText } = useNote();
   const [noteTitle, setNoteTitle] = useState(startingNoteTitle);
+  const updateTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (noteIdParam === noteId) {
@@ -30,9 +29,9 @@ function NoteTextInput({ noteId, startingNoteTitle, startingNoteText }: Props) {
 
     setNoteText(text);
 
-    clearTimeout(updateTimeout);
-    updateTimeout = setTimeout(() => {
-      updateNoteAction(noteId, noteTitle, text);
+    if (updateTimeout.current) clearTimeout(updateTimeout.current);
+    updateTimeout.current = setTimeout(() => {
+      updateNoteAction(noteId, noteTitle, text); // Use latest `text`
     }, 1500);
   };
 
@@ -40,10 +39,10 @@ function NoteTextInput({ noteId, startingNoteTitle, startingNoteText }: Props) {
     const title = e.target.value;
     setNoteTitle(title);
 
-    clearTimeout(updateTimeout);
-    updateTimeout = setTimeout(() => {
-      updateNoteAction(noteId, noteTitle, noteText);
-    })
+    if (updateTimeout.current) clearTimeout(updateTimeout.current);
+    updateTimeout.current = setTimeout(() => {
+      updateNoteAction(noteId, title, noteText); // Use latest `title`
+    }, 1500);
   };
 
   return (
