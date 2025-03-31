@@ -1,61 +1,75 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { ChangeEvent } from "react";
 import { Textarea } from "./ui/textarea";
-import { ChangeEvent, useEffect, useState, useRef } from "react";
-import useNote from "@/hooks/useNote";
+import { useStore } from "@/store/useStore";
 import { updateNoteAction } from "@/actions/notes";
+import { supabase } from "@/lib/supabaseClient";
 
-type Props = {
-  noteId: string;
-  startingNoteTitle: string;
-  startingNoteText: string;
-};
+let updateTimeout: NodeJS.Timeout;
 
-function NoteTextInput({ noteId, startingNoteTitle, startingNoteText }: Props) {
-  const noteIdParam = useSearchParams().get("noteId") || "";
-  const { noteText, setNoteText } = useNote();
-  const [noteTitle, setNoteTitle] = useState(startingNoteTitle);
-  const updateTimeout = useRef<NodeJS.Timeout | null>(null);
+function NoteTextInput() {
+  const { note, setNote } = useStore();
 
-  useEffect(() => {
-    if (noteIdParam === noteId) {
-      setNoteText(startingNoteText);
+  const updateNote = async (noteId: string, title: string, text: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("Note")
+        .update({
+          title: title,
+          text: text
+        })
+        .eq('id', noteId)
+        .select();
+      console.log("data: ", data);
+    } catch (error) {
+      console.error(error);
     }
-  }, [startingNoteText, noteIdParam, noteId, setNoteText]);
+  }
 
   const handleUpdateNote = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
+    setNote({
+      ...note,
+      id: note.id,
+      title: note.title, 
+      text: text
+    });
 
-    setNoteText(text);
-
-    if (updateTimeout.current) clearTimeout(updateTimeout.current);
-    updateTimeout.current = setTimeout(() => {
-      updateNoteAction(noteId, noteTitle, text); // Use latest `text`
+    clearTimeout(updateTimeout);
+    updateTimeout = setTimeout(() => {
+      // updateNoteAction(note.id, note.title, note.text);
+      updateNote(note.id, note.title, text)
     }, 1500);
   };
 
   const handleUpdateTitle = (e: ChangeEvent<HTMLInputElement>) => {
     const title = e.target.value;
-    setNoteTitle(title);
+    setNote({
+      ...note,
+      id: note.id,
+      title: title, 
+      text: note.text
+    })
 
-    if (updateTimeout.current) clearTimeout(updateTimeout.current);
-    updateTimeout.current = setTimeout(() => {
-      updateNoteAction(noteId, title, noteText); // Use latest `title`
+    clearTimeout(updateTimeout);
+    updateTimeout = setTimeout(() => {
+      // updateNoteAction(note.id, note.title, note.text);
+      updateNote(note.id, title, note.text)
     }, 1500);
   };
 
   return (
     <>
       <input
-        value={noteTitle}
+        value={note.title}
         type="text"
         onChange={handleUpdateTitle}
         placeholder="Enter note title..."
         className="mb-4 w-full max-w-4xl border p-4 placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 rounded-md shadow-sm"
       />
       <Textarea
-        value={noteText}
+        value={note.text}
         onChange={handleUpdateNote}
         placeholder="Type your notes here.."
         className="custom-scrollbar mb-4 h-full max-w-4xl resize-none border p-4 placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"

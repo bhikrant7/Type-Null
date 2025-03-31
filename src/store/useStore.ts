@@ -27,9 +27,11 @@ type Note = {
 interface AppState {
   user: User | null;
   uploads: Upload[];
+  note: Note;
   notes: Note[];
 
   // Actions
+  setNote: (note: Note) => void;
   setUser: (user: User) => void;
   addUpload: (upload: Upload) => void;
   removeUpload: (id: string) => void;
@@ -43,10 +45,21 @@ export const useStore = create<AppState>()(
     (set) => ({
       user: null,
       uploads: [],
+      note: {
+        id: "",
+        title: "",
+        text: "",
+        uploadId: "",
+        authorId: "",
+        fileId: "",
+        updatedAt: "",
+      },
       notes: [],
 
       // Set user (Persisted)
       setUser: (user) => set({ user }),
+
+      setNote: (note) => set({ note }),
 
       // Upload actions
       addUpload: (upload) =>
