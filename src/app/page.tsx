@@ -37,7 +37,7 @@ async function HomePage({ searchParams }: Props) {
           <NewNoteButton user={userInfo} />
         </div>
 
-        <NoteTextInput noteId={noteId} startingNoteText={note?.text || ""} />
+        <NoteTextInput noteId={noteId} startingNoteTitle={note?.title || ""} startingNoteText={note?.text || ""} />
 
         <HomeToast />
       </div>
