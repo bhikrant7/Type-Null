@@ -3,7 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const AnalyseButton = () => {
+interface AnalyseButtonProps {
+    onClick?: () => void;
+}
+
+const AnalyseButton = ({ onClick }: AnalyseButtonProps) => {
     const [loading, setLoading] = useState(false);
 
     const handleAnalyse = async () => {
