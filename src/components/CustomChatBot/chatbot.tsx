@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/store/useStore";
 import axios from "axios";
+import { supabase } from "@/lib/supabaseClient";
 
 interface Message {
   id: string;
@@ -26,6 +27,7 @@ export function Chatbot() {
     id: string;
     filename: string;
   } | null>(null);
+  const { user } = useStore();
 
   const API_BASE_URL =
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:9000";
@@ -83,6 +85,21 @@ export function Chatbot() {
 
       console.log("Upload successful:", response.data);
       alert(`${isPDF ? "PDF" : "Video"} uploaded successfully!`);
+      if (response.data) {
+        //query here
+        if (!user) {
+          console.log("No user:", user);
+          return;
+        }
+
+        const { data, error } = await supabase.from("Upload").insert([
+          {
+            id: crypto.randomUUID(),
+            filename: file.name,
+            userId: user.id,
+          },
+        ]);
+      }
 
       const newUpload = { id: crypto.randomUUID(), filename: file.name };
       addUpload(newUpload);
@@ -110,12 +127,15 @@ export function Chatbot() {
 
     try {
       const response = await axios.post(`${API_BASE_URL}/chat`, {
-        message: input,
+        query: input,
+        filename: useStore.getState().uploads[0]?.filename || "",
       });
+
+      console.log("Response from Ft", response.data);
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: response.data.reply || "I'm a placeholder response.",
+        content: response.data.message || "I'm a placeholder response.",
         role: "assistant",
         timestamp: new Date(),
       };
@@ -145,7 +165,7 @@ export function Chatbot() {
     <div className="flex min-h-[90vh] w-full max-w-2xl flex-col rounded-lg border bg-card shadow-lg">
       <div className="flex items-center gap-2 border-b px-4 py-2">
         <Bot className="h-5 w-5 text-primary" />
-        <h2 className="text-lg font-semibold">Chat your file</h2>
+        <h2 className="text-lg font-semibold">Chat with your file</h2>
         {uploadedFile ? (
           <div className="flex items-center gap-2 text-sm text-primary">
             <FileText className="h-4 w-4" />
@@ -169,29 +189,35 @@ export function Chatbot() {
         <div className="space-y-4">
           {messages.map((message) => (
             <div
-              key={message.id}
-              className={cn(
-                "flex w-max max-w-[80%] flex-col gap-1 rounded-lg px-4 py-2",
-                message.role === "user"
-                  ? "ml-auto bg-primary text-primary-foreground"
-                  : "bg-muted",
+            key={message.id}
+            className={cn(
+              "flex w-full max-w-[80%] flex-col gap-1 rounded-lg px-4 py-2",
+              message.role === "user"
+                ? "ml-auto bg-primary text-primary-foreground"
+                : "bg-muted"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              {message.role === "user" ? (
+                <User className="h-4 w-4" />
+              ) : (
+                <Bot className="h-4 w-4" />
               )}
-            >
-              <div className="flex items-center gap-2">
-                {message.role === "user" ? (
-                  <User className="h-4 w-4" />
-                ) : (
-                  <Bot className="h-4 w-4" />
-                )}
-                <span className="text-sm">
-                  {message.role === "user" ? "You" : "Assistant"}
-                </span>
-              </div>
-              <p className="text-sm">{message.content}</p>
-              <span className="text-xs opacity-50">
-                {message.timestamp.toLocaleTimeString()}
+              <span className="text-sm">
+                {message.role === "user" ? "You" : "Assistant"}
               </span>
             </div>
+          
+            {/* ✅ Fixes overflow by enforcing proper wrapping */}
+            <p className="text-sm break-words whitespace-pre-wrap overflow-hidden text-ellipsis">
+              {message.content}
+            </p>
+          
+            <span className="text-xs opacity-50">
+              {message.timestamp.toLocaleTimeString()}
+            </span>
+          </div>
+          
           ))}
           {isLoading && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
