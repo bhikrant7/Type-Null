@@ -1,3 +1,4 @@
+import { report } from "process";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -23,16 +24,24 @@ type Note = {
   updatedAt: string;
 };
 
+type NoteAnalysisReport = {
+  accuracy: string;
+  missing_info: string[];
+  roadmap: string[];
+}
+
 // Define Zustand store
 interface AppState {
   user: User | null;
   uploads: Upload[];
   note: Note;
   notes: Note[];
+  noteAnalysisReport: NoteAnalysisReport | null;
 
   // Actions
   setNote: (note: Note) => void;
   setUser: (user: User) => void;
+  setNoteAnalysisReport: (report: NoteAnalysisReport | null) => void;
   addUpload: (upload: Upload) => void;
   removeUpload: (id: string) => void;
   addNote: (note: Note) => void;
@@ -55,7 +64,13 @@ export const useStore = create<AppState>()(
         fileId: "",
         updatedAt: "",
       },
+      noteAnalysisReport: {
+        accuracy: "",
+        missing_info: [],
+        roadmap: []
+      },
       notes: [],
+      setNoteAnalysisReport: (report) => set({ noteAnalysisReport: report }),
 
       // Set user (Persisted)
       setUser: (user) => set({ user }),

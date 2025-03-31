@@ -1,11 +1,19 @@
 "use client";
 
 import AnalyseButton from "@/components/AnalyseButton";
+import { useStore } from "../store/useStore";
+import AnalysisReport from "../components/CustomPopup/AnalysisReport";
 
-export default function AnalyseButtonWrapper({ note }: { note?: any }) {
+export default function AnalyseButtonWrapper() {
+
+  const { note } = useStore();
   const handleAnalyseNote = async () => {
     try {
-      if (!note) return;
+      console.log("Note data:", note); // Debugging
+      if (!note) {
+          console.warn("No note available!");
+          return;
+      }
 
       let analyseRequestBody = {
         title: note.title,
@@ -18,5 +26,10 @@ export default function AnalyseButtonWrapper({ note }: { note?: any }) {
     }
   };
 
-  return <AnalyseButton onClick={handleAnalyseNote} />;
+  return (
+    <>
+      <AnalysisReport />
+      <AnalyseButton onClick={handleAnalyseNote} />
+    </>
+  );
 }
