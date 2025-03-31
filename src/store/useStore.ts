@@ -64,11 +64,7 @@ export const useStore = create<AppState>()(
         fileId: "",
         updatedAt: "",
       },
-      noteAnalysisReport: {
-        accuracy: "",
-        missing_info: [],
-        roadmap: []
-      },
+      noteAnalysisReport: null,
       notes: [],
       setNoteAnalysisReport: (report) => set({ noteAnalysisReport: report }),
 
