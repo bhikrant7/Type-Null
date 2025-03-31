@@ -12,3 +12,9 @@ export const handleError = (error: unknown) => {
     return { errorMessage: "An error occurred" };
   }
 };
+
+export function getRandomSubset<T>(arr: T[], count: number): T[] {
+  if (!arr || arr.length === 0) return [];
+  const shuffled = [...arr].sort(() => 0.5 - Math.random()); // Shuffle array
+  return shuffled.slice(0, count); // Pick `count` items
+}

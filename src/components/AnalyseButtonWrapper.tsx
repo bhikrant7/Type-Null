@@ -4,6 +4,7 @@ import AnalyseButton from "@/components/AnalyseButton";
 import { useStore } from "../store/useStore";
 import axios from "axios";
 import AnalysisReport from "../components/CustomPopup/AnalysisReport";
+import { getRandomSubset } from "@/lib/utils";
 
 export default function AnalyseButtonWrapper() {
   const API_BASE_URL =
@@ -34,7 +35,7 @@ export default function AnalyseButtonWrapper() {
       setNoteAnalysisReport({
         accuracy: response.data.accuracy,
         missing_info: response.data.missing_info,
-        roadmap: response.data.roadmap
+        roadmap: getRandomSubset(response.data.roadmap, 5),
       })
     } catch (error) {
       console.error("error: ", error);
