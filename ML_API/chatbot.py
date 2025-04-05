@@ -16,7 +16,7 @@ retriever_cache = {}
 
 def initialize_llm():
   # OpenRouter API Key
-  OPEN_ROUTER_API_KEY = "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"
+  OPEN_ROUTER_API_KEY = "add your key"
 
   # Initialize LLM
   llm = ChatOpenAI(
